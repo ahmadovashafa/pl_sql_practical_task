@@ -1,0 +1,49 @@
+
+
+
+create table customer(
+customer_id  number generated as identity primary key,
+first_name  varchar2(20)unique,
+last_name  varchar2(20)unique,
+email  varchar2(20) not null);
+create sequence customerr_sq; 
+
+create or replace package pkg_customer as
+procedure add_new_cust
+(p_first_name customer.first_name%type,
+p_last_name customer.last_name%type,
+p_email customer.email%type);
+end pkg_customer ;
+
+
+/
+create or replace package body pkg_customer as
+procedure add_new_cust
+(p_first_name customer.first_name%type,
+p_last_name customer.last_name%type,
+p_email customer.email%type)
+
+is
+
+begin
+--insert data
+
+insert into customer(first_name,last_name,email)values(p_first_name,p_last_name,p_email);
+EXCEPTION 
+   WHEN no_data_found THEN 
+      dbms_output.put_line('No such customer!'); 
+   WHEN others THEN 
+      dbms_output.put_line('Error!'); 
+END add_new_cust; 
+end pkg_customer;
+
+
+set serveroutput on
+
+exec pkg_customer.add_new_cust('Shafa','Ahmad','shafa@mail.ru');
+exec pkg_customer.add_new_cust('Gunay','Ahmadova','shafa@mail.ru');
+exec pkg_customer.add_new_cust('Gunay','Babayeva','shafa@mail.ru'); --error repat name
+exec pkg_customer.add_new_cust('Gunay','salahova','');--error
+
+SELECT*FROM CUSTOMER;
+
